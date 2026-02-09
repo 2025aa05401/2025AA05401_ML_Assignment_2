@@ -1,6 +1,6 @@
-Step 1: Dataset choice
-Choose ONE classification dataset of your choice from any public repository -
-Kaggle or UCI. It may be a binary classification problem or a multi-class
-classification problem.
-Minimum Feature Size: 12
-Minimum Instance Size: 500
+streamlit
+scikit-learn
+numpy
+pandas
+matplotlib
+seaborn

@@ -51,4 +51,15 @@ Recall,F1 Score,Matthews Correlation Coefficient (MCC)
 | XGBoost (Ensemble)       | Delivered the best overall performance across all metrics. Its boosting mechanism effectively handled class imbalance and complex feature interactions,                               making it the most reliable model. 
 
 
+| ML Model Name            | Observation about Model Performance                                                                                                                                              |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Logistic Regression      | Achieved good accuracy and AUC but had low recall, indicating difficulty in correctly identifying high-income individuals due to class imbalance and linear decision boundaries. |
+| Decision Tree            | Showed balanced precision and recall but lower AUC, suggesting overfitting and limited generalization capability.                                                                |
+| kNN                      | Performed better than single-tree models with improved F1 score and MCC, but performance depended heavily on feature scaling and the choice of neighborhood size.                |
+| Naive Bayes              | Achieved relatively high AUC but very low recall, indicating strong probabilistic separation but poor detection of the minority (>50K) class due to the independence assumption. |
+| Random Forest (Ensemble) | Significantly improved all evaluation metrics by combining multiple decision trees, effectively capturing non-linear relationships and reducing overfitting.                     |
+| XGBoost (Ensemble)       | Delivered the best overall performance across all metrics. Its boosting approach handled class imbalance and complex feature interactions, making it the most reliable model.    |
+
+
+
 

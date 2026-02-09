@@ -39,18 +39,6 @@ Recall,F1 Score,Matthews Correlation Coefficient (MCC)
 | Random Forest (Ensemble) | 0.859205 | 0.910814 | 0.740576  | 0.639031 | 0.686066 | 0.598644 |
 | XGBoost (Ensemble)       | 0.876248 | 0.928644 | 0.776087  | 0.683036 | 0.726594 | 0.649242 |
 
-| ML Model Name            | Observation about model performance   |                                                                                                                 |--------------------------|---------------------------------------|                       
-| Logistic Regression      | Achieved good accuracy and AUC but had low recall, indicating difficulty in correctly identifying high-income individuals due to class imbalance and                                 linear decision boundaries. 
-
-| Decision Tree            | Showed balanced precision and recall but lower AUC, suggesting overfitting and limited generalization capability.
-
-| kNN                      | Performed better than single-tree models with improved F1 and MCC, but performance depended heavily on feature scaling and neighborhood selection.                                         
-| Naive Bayes              | Achieved relatively high AUC but very low recall, indicating strong probabilistic separation but poor detection of the minority (>50K) class due to                                  independence assumptions.  
-
-| Random Forest (Ensemble) | Significantly improved all metrics by combining multiple decision trees, effectively handling non-linear relationships and reducing overfitting.                                           
-| XGBoost (Ensemble)       | Delivered the best overall performance across all metrics. Its boosting mechanism effectively handled class imbalance and complex feature interactions,                               making it the most reliable model. 
-
-
 | ML Model Name            | Observation about Model Performance                                                                                                                                              |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Logistic Regression      | Achieved good accuracy and AUC but had low recall, indicating difficulty in correctly identifying high-income individuals due to class imbalance and linear decision boundaries. |

@@ -50,10 +50,11 @@ if uploaded_file is not None:
 
     X = data.drop("income", axis=1)
     y = data["income"]
-
+    # Convert categorical columns to numeric
+    X_encoded = pd.get_dummies(X, drop_first=True)
     # Feature Scaling
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+    X_scaled = scaler.fit_transform(X_encoded)
 
     # -------------------------------
     # (b) Model Selection Dropdown

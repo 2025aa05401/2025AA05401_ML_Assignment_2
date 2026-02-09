@@ -49,7 +49,8 @@ if uploaded_file is not None:
         st.stop()
 
     X = data.drop("income", axis=1)
-    y = data["income"]
+    y = data["income"].apply(lambda x: 1 if ">50K" in str(x) else 0)
+
     # Convert categorical columns to numeric
     X_encoded = pd.get_dummies(X, drop_first=True)
     # Feature Scaling

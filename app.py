@@ -1,97 +1,137 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import (
+    accuracy_score, roc_auc_score, precision_score,
+    recall_score, f1_score, matthews_corrcoef,
+    confusion_matrix, classification_report
+)
 
 # -------------------------------
 # Page Configuration
 # -------------------------------
-st.set_page_config(
-    page_title="Adult Income Classification",
-    layout="wide"
-)
+st.set_page_config(page_title="Adult Income Classifier", layout="wide")
 
-# -------------------------------
-# Title & Description
-# -------------------------------
-st.title("💼 Adult Income Classification – Model Comparison")
+st.title("💼 Adult Income Classification – Streamlit App")
+
 st.write("""
-This application compares multiple machine learning classification models  
-used to predict whether an individual's income exceeds **$50K per year**.
+Upload **test data only** (CSV format) from the Adult Income dataset  
+and evaluate different classification models.
 """)
 
 # -------------------------------
-# Dataset Description
+# (a) Dataset Upload Option
 # -------------------------------
-st.header("📊 Dataset Description")
+st.header("📂 Upload Test Dataset (CSV)")
 
-st.markdown("""
-- **Dataset:** Adult Income Dataset (UCI Machine Learning Repository)
-- **Instances:** 48,842
-- **Features:** 14
-- **Target Variable:**
-  - `<=50K` → Low Income  
-  - `>50K` → High Income
-- **Problem Type:** Binary Classification
-""")
+uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
 
-# -------------------------------
-# Evaluation Metrics Table
-# -------------------------------
-st.header("📈 Model Evaluation Metrics")
+if uploaded_file is not None:
+    data = pd.read_csv(uploaded_file)
+    st.success("Dataset uploaded successfully!")
+    st.write("Preview of uploaded data:")
+    st.dataframe(data.head())
 
-results_data = {
-    "ML Model Name": [
-        "Logistic Regression",
-        "Decision Tree",
-        "kNN",
-        "Naive Bayes",
-        "Random Forest (Ensemble)",
-        "XGBoost (Ensemble)"
-    ],
-    "Accuracy": [0.827883, 0.812529, 0.834024, 0.808076, 0.859205, 0.876248],
-    "AUC": [0.860793, 0.753214, 0.856943, 0.864383, 0.910814, 0.928644],
-    "Precision": [0.724623, 0.604707, 0.671117, 0.704370, 0.740576, 0.776087],
-    "Recall": [0.459821, 0.639031, 0.609056, 0.349490, 0.639031, 0.683036],
-    "F1 Score": [0.562622, 0.621395, 0.638582, 0.467178, 0.686066, 0.726594],
-    "MCC": [0.480593, 0.497277, 0.532241, 0.399403, 0.598644, 0.649242]
-}
+    # -------------------------------
+    # Separate Features & Target
+    # -------------------------------
+    if "income" not in data.columns:
+        st.error("Target column 'income' not found in dataset!")
+        st.stop()
 
-results_df = pd.DataFrame(results_data)
+    X = data.drop("income", axis=1)
+    y = data["income"]
 
-st.dataframe(results_df, use_container_width=True)
+    # Feature Scaling
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
 
-# -------------------------------
-# Observations Section
-# -------------------------------
-st.header("🧠 Model Performance Observations")
+    # -------------------------------
+    # (b) Model Selection Dropdown
+    # -------------------------------
+    st.header("🤖 Select Classification Model")
 
-observations = {
-    "Logistic Regression":
-        "Good accuracy and AUC but low recall, indicating difficulty in identifying high-income individuals.",
-    "Decision Tree":
-        "Balanced precision and recall but lower AUC, suggesting overfitting.",
-    "kNN":
-        "Improved F1 score and MCC; performance depends on feature scaling and choice of k.",
-    "Naive Bayes":
-        "High AUC but very low recall due to independence assumptions and class imbalance.",
-    "Random Forest (Ensemble)":
-        "Strong performance across metrics by capturing non-linear patterns and reducing overfitting.",
-    "XGBoost (Ensemble)":
-        "Best overall performer; effectively handles class imbalance and complex feature interactions."
-}
+    model_name = st.selectbox(
+        "Choose a model:",
+        [
+            "Logistic Regression",
+            "Decision Tree",
+            "KNN",
+            "Naive Bayes",
+            "Random Forest",
+            "XGBoost"
+        ]
+    )
 
-for model, obs in observations.items():
-    st.subheader(model)
-    st.write(obs)
+    if model_name == "Logistic Regression":
+        model = LogisticRegression(max_iter=1000)
+    elif model_name == "Decision Tree":
+        model = DecisionTreeClassifier(random_state=42)
+    elif model_name == "KNN":
+        model = KNeighborsClassifier(n_neighbors=5)
+    elif model_name == "Naive Bayes":
+        model = GaussianNB()
+    elif model_name == "Random Forest":
+        model = RandomForestClassifier(n_estimators=100, random_state=42)
+    else:
+        model = XGBClassifier(eval_metric="logloss", random_state=42)
 
-# -------------------------------
-# Conclusion
-# -------------------------------
-st.header("✅ Conclusion")
+    # -------------------------------
+    # Train Model
+    # -------------------------------
+    model.fit(X_scaled, y)
 
-st.markdown("""
-- **Ensemble models outperform individual classifiers**
-- **XGBoost** achieved the highest Accuracy, AUC, F1 Score, and MCC
-- **AUC and MCC** are more reliable than accuracy for imbalanced datasets like Adult Income
-""")
+    y_pred = model.predict(X_scaled)
+    y_prob = model.predict_proba(X_scaled)[:, 1]
 
-st.success("🎯 XGBoost is the most suitable model for this dataset.")
+    # -------------------------------
+    # (c) Display Evaluation Metrics
+    # -------------------------------
+    st.header("📊 Evaluation Metrics")
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Accuracy", round(accuracy_score(y, y_pred), 4))
+    col1.metric("AUC", round(roc_auc_score(y, y_prob), 4))
+
+    col2.metric("Precision", round(precision_score(y, y_pred), 4))
+    col2.metric("Recall", round(recall_score(y, y_pred), 4))
+
+    col3.metric("F1 Score", round(f1_score(y, y_pred), 4))
+    col3.metric("MCC", round(matthews_corrcoef(y, y_pred), 4))
+
+    # -------------------------------
+    # (d) Confusion Matrix
+    # -------------------------------
+    st.header("🧩 Confusion Matrix")
+
+    cm = confusion_matrix(y, y_pred)
+    cm_df = pd.DataFrame(
+        cm,
+        index=["Actual <=50K", "Actual >50K"],
+        columns=["Predicted <=50K", "Predicted >50K"]
+    )
+
+    st.dataframe(cm_df)
+
+    # -------------------------------
+    # Classification Report
+    # -------------------------------
+    st.header("📄 Classification Report")
+
+    report = classification_report(y, y_pred, output_dict=True)
+    report_df = pd.DataFrame(report).transpose()
+
+    st.dataframe(report_df.round(4))
+
+else:
+    st.info("Please upload a CSV file to continue.")

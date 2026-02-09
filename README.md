@@ -20,7 +20,6 @@ Number of features: 14 (after preprocessing)
 Target variable:
 
 <=50K → Income less than or equal to $50K
-
 >50K → Income greater than $50K
 
 Feature types: Combination of categorical and numerical features such as age, education, occupation, workclass, hours-per-week, etc.

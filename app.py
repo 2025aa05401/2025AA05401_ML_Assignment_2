@@ -21,7 +21,7 @@ from sklearn.metrics import (
 # -------------------------------
 st.set_page_config(page_title="Adult Income Classifier", layout="wide")
 
-st.title("💼 Adult Income Classification – Streamlit App")
+st.title("Adult Income Classification – Streamlit App")
 
 st.write("""
 Upload **test data only** (CSV format) from the Adult Income dataset  
@@ -31,7 +31,7 @@ and evaluate different classification models.
 # -------------------------------
 # (a) Dataset Upload Option
 # -------------------------------
-st.header("📂 Upload Test Dataset (CSV)")
+st.header("Upload Test Dataset (CSV)")
 
 uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
 
@@ -60,7 +60,7 @@ if uploaded_file is not None:
     # -------------------------------
     # (b) Model Selection Dropdown
     # -------------------------------
-    st.header("🤖 Select Classification Model")
+    st.header("Select Classification Model")
 
     model_name = st.selectbox(
         "Choose a model:",
@@ -114,7 +114,7 @@ if uploaded_file is not None:
     # -------------------------------
     # (d) Confusion Matrix
     # -------------------------------
-    st.header("🧩 Confusion Matrix")
+    st.header("Confusion Matrix")
 
     cm = confusion_matrix(y, y_pred)
     cm_df = pd.DataFrame(
@@ -128,7 +128,7 @@ if uploaded_file is not None:
     # -------------------------------
     # Classification Report
     # -------------------------------
-    st.header("📄 Classification Report")
+    st.header("Classification Report")
 
     report = classification_report(y, y_pred, output_dict=True)
     report_df = pd.DataFrame(report).transpose()

@@ -32,14 +32,14 @@ Download the file, then upload it using the option provided.
 # Load test dataset from local file
 @st.cache_data
 def load_test_data():
-    return pd.read_csv("adult_test_data.csv")
+    return pd.read_csv("adult_data.csv")
 
 test_df = load_test_data()
 
 st.download_button(
     label="📥 Download Adult Income Test Data (CSV)",
     data=test_df.to_csv(index=False),
-    file_name="adult_income_test_data.csv",
+    file_name="adult_data.csv",
     mime="text/csv"
 )
 st.write("""

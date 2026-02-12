@@ -22,7 +22,26 @@ from sklearn.metrics import (
 st.set_page_config(page_title="Adult Income Classifier", layout="wide")
 
 st.title("💼 Adult Income Classification – Streamlit App")
+st.header("⬇️ Download Test Dataset")
 
+st.markdown("""
+Use the sample **Adult Income test dataset** below to evaluate different models.
+Download the file, then upload it using the option provided.
+""")
+
+# Load test dataset from local file
+@st.cache_data
+def load_test_data():
+    return pd.read_csv("adult_test_data.csv")
+
+test_df = load_test_data()
+
+st.download_button(
+    label="📥 Download Adult Income Test Data (CSV)",
+    data=test_df.to_csv(index=False),
+    file_name="adult_income_test_data.csv",
+    mime="text/csv"
+)
 st.write("""
 Upload **test data only** (CSV format) from the Adult Income dataset  
 and evaluate different classification models.

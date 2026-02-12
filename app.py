@@ -98,7 +98,7 @@ if uploaded_file is not None:
     # -------------------------------
     # (c) Display Evaluation Metrics
     # -------------------------------
-    st.header("📊 Evaluation Metrics")
+    st.header("Evaluation Metrics")
 
     col1, col2, col3 = st.columns(3)
 
